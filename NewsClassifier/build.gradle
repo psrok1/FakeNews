@@ -1,28 +1,19 @@
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'java'
-apply plugin: 'scala'
-apply plugin: 'application'
-
-mainClassName = "FakeNewsTracker"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+	compile 'org.springframework.boot:spring-boot-starter-web:1.5.3.RELEASE'
+	
 	compile 'org.json:json:20160810'
 	compile 'org.jsoup:jsoup:1.10.2'
 	compile 'com.rometools:rome:1.7.2'
-  	compile 'org.slf4j:slf4j-api:1.7.21'
-  	compile 'org.slf4j:slf4j-simple:1.7.21'
-  	compile 'org.scala-lang:scala-library:2.11.8'
+	compile 'org.slf4j:1.6.1'	
+	compile 'com.typesafe.akka:akka-actor_2.11:2.5.1'
   	compile 'org.apache.httpcomponents:httpclient:4.5.3'
 }
  
-tasks.withType(ScalaCompile) {
-  	scalaCompileOptions.useAnt = false
-}
- 
-dependencies {
-  	compile group: 'com.typesafe.akka', name: 'akka-actor_2.11', version: '2.5.0'
-  	compile group: 'org.scala-lang', name: 'scala-library', version: '2.11.8'
-}

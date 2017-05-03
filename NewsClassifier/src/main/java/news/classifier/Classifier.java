@@ -1,4 +1,4 @@
-package classifier;
+package news.classifier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,7 +9,7 @@ import java.io.OutputStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import grabbers.Article;
+import news.Article;
 
 public class Classifier {
 	private static final Logger logger = LoggerFactory.getLogger(Classifier.class);

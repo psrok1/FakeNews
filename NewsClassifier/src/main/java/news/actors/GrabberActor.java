@@ -1,4 +1,4 @@
-package actors;
+package news.actors;
 
 import java.net.URL;
 
@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
-import grabbers.Article;
-import grabbers.HTTPSession;
+import news.Article;
+import news.HTTPSession;
 
 public abstract class GrabberActor extends AbstractActor {
 	private static final Logger logger = LoggerFactory.getLogger(GrabberActor.class);

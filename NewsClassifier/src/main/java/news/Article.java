@@ -1,4 +1,4 @@
-package grabbers;
+package news;
 
 import java.io.Serializable;
 

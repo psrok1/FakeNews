@@ -1,10 +1,11 @@
-package grabbers;
+package news.grabbers;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import actors.GrabberActor;
+import news.Article;
+import news.actors.GrabberActor;
 
 public class DailyMailGrabberActor extends GrabberActor {
 
