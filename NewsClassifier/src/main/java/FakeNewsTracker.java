@@ -4,10 +4,12 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import actors.ClassifierActor;
 import actors.RSSFeedActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import akka.routing.BalancingPool;
 import grabbers.DailyMailGrabberActor;
 import grabbers.NYTimesGrabberActor;
 import scala.concurrent.duration.Duration;
@@ -32,6 +34,9 @@ public class FakeNewsTracker {
 		try {
 			final ActorSystem system = ActorSystem.create("fakenews");
 			
+			final ActorRef classifierPool = system.actorOf(new BalancingPool(3).props(
+					Props.create(ClassifierActor.class)), "classifier");
+			
 			for(Source source: sources)
 			{
 				final ActorRef rssFeed = system.actorOf(
@@ -43,7 +48,7 @@ public class FakeNewsTracker {
 						rssFeed,
 						"update",
 						system.dispatcher(),
-						ActorRef.noSender());
+						classifierPool); /* classifierPool as sender */
 			}			
 		} catch(MalformedURLException e)
 		{

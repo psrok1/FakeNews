@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import akka.actor.AbstractActor;
+import akka.actor.ActorRef;
 import grabbers.Article;
 import grabbers.HTTPSession;
 
@@ -30,9 +31,8 @@ public abstract class GrabberActor extends AbstractActor {
 			Document doc = Jsoup.parse(html);
 			logger.info("Parsing news");
 			Article article = getArticle(doc);
-			logger.info(article.getHeading());
-			logger.info(article.getArticle());
-			// TODO
+			logger.info(String.format("Fetched article %s", article.getHeading()));
+			getSender().tell(article, ActorRef.noSender());
 		} catch(Exception e)
 		{
 			logger.error("Good news for people who loves bad news");

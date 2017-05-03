@@ -59,7 +59,7 @@ public class RSSFeedActor extends AbstractActor {
 					logger.info(String.format("Found some good news: %s", e.getLink()));
 					/* send to grabberActor */
 					try {
-						grabberActor.tell(new URL(e.getLink()), getSelf());
+						grabberActor.tell(new URL(e.getLink()), getSender());
 					} catch (MalformedURLException exc) {
 						exc.printStackTrace();
 					}
