@@ -31,6 +31,7 @@ public abstract class GrabberActor extends AbstractActor {
 			Document doc = Jsoup.parse(html);
 			logger.info("Parsing news");
 			Article article = getArticle(doc);
+			article.setOrigin(newsUrl.toString());
 			logger.info(String.format("Fetched article %s", article.getHeading()));
 			getSender().tell(article, ActorRef.noSender());
 		} catch(Exception e)

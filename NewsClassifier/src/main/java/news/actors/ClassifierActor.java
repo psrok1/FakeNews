@@ -17,7 +17,7 @@ public class ClassifierActor extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				/*.match(Article.class, this::classify)*/
+				.match(Article.class, this::classify)
 				.build();
 	}
 
