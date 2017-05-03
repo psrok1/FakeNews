@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import grabbers.Article;
 
 public class Classifier {
-	private static final Logger logger = LoggerFactory.getLogger(FakeNewsTracker.class);
+	private static final Logger logger = LoggerFactory.getLogger(Classifier.class);
 	private final String MAIN_SCRIPT = "classifier/run.py";
 	
 	private Process procClassifier = null;
