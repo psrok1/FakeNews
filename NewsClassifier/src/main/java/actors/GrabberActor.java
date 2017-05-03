@@ -2,12 +2,14 @@ package actors;
 
 import java.net.URL;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import akka.actor.AbstractActor;
+import grabbers.Article;
 
 public abstract class GrabberActor extends AbstractActor {
-	abstract protected void getArticle(Document document);
+	abstract protected Article getArticle(Document document);
 	
 	private void getNewsFromUrl(URL newsUrl)
 	{
@@ -17,6 +19,16 @@ public abstract class GrabberActor extends AbstractActor {
 		 * Get heading and article from Document using getArticle
 		 * Send object containing heading and article to classifier actor
 		 */
+		try {
+			Document doc = Jsoup.connect(newsUrl.toString()).get();
+			Article article = getArticle(doc);
+			// TODO
+		} catch(Exception e)
+		{
+			/**
+			 * TODO log
+			 */
+		}
 	}
 	
 	@Override
