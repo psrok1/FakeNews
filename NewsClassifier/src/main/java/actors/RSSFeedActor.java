@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import grabbers.LoggingGrabber;
 
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
