@@ -8,7 +8,7 @@ import actors.RSSFeedActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-
+import grabbers.DailyMailGrabberActor;
 import grabbers.NYTimesGrabberActor;
 import scala.concurrent.duration.Duration;
 
@@ -19,7 +19,10 @@ public class FakeNewsTracker {
 	private static Source sources[] = {
 			new Source<NYTimesGrabberActor>
 				("http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", 
-			     NYTimesGrabberActor.class)
+			     NYTimesGrabberActor.class),
+			new Source<DailyMailGrabberActor>
+				("http://www.dailymail.co.uk/news/articles.rss",
+				 DailyMailGrabberActor.class)
 	};
 	
 	public static void main(String args[])

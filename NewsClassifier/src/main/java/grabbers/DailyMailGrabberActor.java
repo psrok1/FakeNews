@@ -10,9 +10,9 @@ public class DailyMailGrabberActor extends GrabberActor {
 
 	@Override
 	protected Article getArticle(Document document) {
-		String heading = document.select("#js-article-text").first().text();
+		String heading = document.select("#js-article-text h1").first().text();
 		
-		Elements pNodes = document.select("p[itemprop = articleBody]").select("p");
+		Elements pNodes = document.select("div[itemprop = articleBody]").select("p");
 		String articleText = "";
 		for (Element p : pNodes) {
 			articleText += p.text();
