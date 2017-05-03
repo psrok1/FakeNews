@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import edu.fakenews.news.article.Article;
 import edu.fakenews.news.article.ArticleRepository;
@@ -38,6 +39,8 @@ public class WebController {
 	
 	@RequestMapping(value="/push", method=RequestMethod.POST)
     public String addArticle(@RequestBody final Article article) {
-		return actorSystem.name();
+		article.setOrigin("external");
+		actorSystem.actorSelection("classifier").tell(article, ActorRef.noSender());
+		return "OK";
     }
 }
