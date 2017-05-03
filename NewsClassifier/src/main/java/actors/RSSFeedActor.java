@@ -56,9 +56,10 @@ public class RSSFeedActor extends AbstractActor {
 			feed.getEntries().stream()
 				.filter(e -> e.getPublishedDate().after(feedLastDate))
 				.forEach(e -> {
+					logger.info(String.format("Found some good news: %s", e.getLink()));
 					/* send to grabberActor */
 					try {
-						grabberActor.tell(new URL(e.getUri()), getSelf());
+						grabberActor.tell(new URL(e.getLink()), getSelf());
 					} catch (MalformedURLException exc) {
 						exc.printStackTrace();
 					}
@@ -73,7 +74,7 @@ public class RSSFeedActor extends AbstractActor {
 			});
 		} catch(Exception e)
 		{
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -86,9 +87,7 @@ public class RSSFeedActor extends AbstractActor {
 						this.updateFeed();
 					else
 					{
-						/**
-						 * @todo: log an error
-						 */
+						logger.error("Unknown command");
 					}
 				})
 				.build();

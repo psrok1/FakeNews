@@ -1,18 +1,18 @@
-package actors;
+package grabbers;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import grabbers.Article;
+import actors.GrabberActor;
 
-public class NYTimesGrabberActor extends GrabberActor {
+public class DailyMailGrabberActor extends GrabberActor {
 
 	@Override
 	protected Article getArticle(Document document) {
-		String heading = document.select("#headline").text();
+		String heading = document.select("#js-article-text").first().text();
 		
-		Elements pNodes = document.select(".story-body").first().select("p");
+		Elements pNodes = document.select("p[itemprop = articleBody]").select("p");
 		String articleText = "";
 		for (Element p : pNodes) {
 			articleText += p.text();
