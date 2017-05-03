@@ -1,4 +1,4 @@
-package news;
+package edu.fakenews.news;
 
 import java.io.IOException;
 import java.net.URL;

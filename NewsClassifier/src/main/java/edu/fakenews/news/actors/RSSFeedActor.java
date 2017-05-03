@@ -1,4 +1,4 @@
-package news.actors;
+package edu.fakenews.news.actors;
 
 import java.net.MalformedURLException;
 import java.net.URL;

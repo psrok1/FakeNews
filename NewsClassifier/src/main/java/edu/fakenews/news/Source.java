@@ -1,9 +1,9 @@
-package news;
+package edu.fakenews.news;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import news.actors.GrabberActor;
+import edu.fakenews.news.actors.GrabberActor;
 
 public class Source<Actor extends GrabberActor> {
 	private final String url;

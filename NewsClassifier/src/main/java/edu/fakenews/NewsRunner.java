@@ -1,4 +1,4 @@
-package main;
+package edu.fakenews;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
@@ -14,11 +14,11 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.routing.BalancingPool;
-import news.Source;
-import news.actors.ClassifierActor;
-import news.actors.RSSFeedActor;
-import news.grabbers.DailyMailGrabberActor;
-import news.grabbers.NYTimesGrabberActor;
+import edu.fakenews.news.Source;
+import edu.fakenews.news.actors.ClassifierActor;
+import edu.fakenews.news.actors.RSSFeedActor;
+import edu.fakenews.news.grabbers.DailyMailGrabberActor;
+import edu.fakenews.news.grabbers.NYTimesGrabberActor;
 import scala.concurrent.duration.Duration;
 
 @Component

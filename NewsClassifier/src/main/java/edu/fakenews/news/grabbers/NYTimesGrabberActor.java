@@ -1,4 +1,4 @@
-package news.grabbers;
+package edu.fakenews.news.grabbers;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -6,8 +6,8 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import news.Article;
-import news.actors.GrabberActor;
+import edu.fakenews.news.actors.GrabberActor;
+import edu.fakenews.news.article.Article;
 
 public class NYTimesGrabberActor extends GrabberActor {
 	private static final Logger logger = LoggerFactory.getLogger(NYTimesGrabberActor.class);

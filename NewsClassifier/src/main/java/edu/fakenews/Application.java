@@ -1,4 +1,4 @@
-package main;
+package edu.fakenews;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

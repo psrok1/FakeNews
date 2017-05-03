@@ -1,10 +1,10 @@
-package news.actors;
+package edu.fakenews.news.actors;
 
 import java.io.IOException;
 
 import akka.actor.AbstractActor;
-import news.Article;
-import news.classifier.Classifier;
+import edu.fakenews.news.article.Article;
+import edu.fakenews.news.classifier.Classifier;
 
 public class ClassifierActor extends AbstractActor {
 	//private Classifier classifier = new Classifier();
