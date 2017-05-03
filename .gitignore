@@ -27,3 +27,5 @@ out
 
 # Gradle
 .gradle
+
+.recommenders
