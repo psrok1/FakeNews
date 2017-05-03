@@ -15,6 +15,7 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.routing.BalancingPool;
 import edu.fakenews.news.Source;
+import edu.fakenews.news.SpringExtension;
 import edu.fakenews.news.actors.ClassifierActor;
 import edu.fakenews.news.actors.RSSFeedActor;
 import edu.fakenews.news.grabbers.DailyMailGrabberActor;
@@ -37,6 +38,9 @@ public class NewsRunner implements ApplicationRunner {
 
 	@Autowired
 	private ActorSystem actorSystem;
+	
+	@Autowired
+	private SpringExtension springExtension;
 		
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -46,6 +50,9 @@ public class NewsRunner implements ApplicationRunner {
 				new BalancingPool(3).props(
 						Props.create(ClassifierActor.class)
 				), "classifier");
+		
+		// Create storage actor managed by Spring
+		actorSystem.actorOf(springExtension.props("storageActor"), "storage");
 		
 		for(Source<?> source: sources)
 		{

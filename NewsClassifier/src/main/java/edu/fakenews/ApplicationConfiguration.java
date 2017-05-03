@@ -9,13 +9,22 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import akka.actor.ActorSystem;
+import edu.fakenews.news.SpringExtension;
 
 @Configuration
 public class ApplicationConfiguration {
+	@Autowired
+	private ApplicationContext applicationContext;
+	
+	@Autowired
+	private SpringExtension springExtension;
+	
 	@Bean
 	public ActorSystem actorSystem()
 	{
-		return ActorSystem.create("fakenews", akkaConfiguration());
+		ActorSystem system = ActorSystem.create("fakenews", akkaConfiguration());
+		springExtension.initialize(applicationContext);
+		return system;
 	}
 	
 	@Bean
