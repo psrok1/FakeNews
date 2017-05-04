@@ -2,6 +2,7 @@ package edu.fakenews.news.classifier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -14,7 +15,8 @@ import edu.fakenews.news.article.Article;
 
 public class Classifier {
 	private static final Logger logger = LoggerFactory.getLogger(Classifier.class);
-	private final String MAIN_SCRIPT = "classifier/classify.py";
+	private final String MAIN_SCRIPT = "classify.py";
+	private final String DIR_SCRIPT = "./classifier";
 	
 	private Process procClassifier = null;
 	
@@ -36,7 +38,7 @@ public class Classifier {
 			this.procClassifier = Runtime.getRuntime().exec(new String[]{
 					"python3",
 					MAIN_SCRIPT
-			});
+			}, null, new File(DIR_SCRIPT));
 			
 			this.pipeInput = new BufferedReader(
 					new InputStreamReader(procClassifier.getInputStream()));
