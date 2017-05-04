@@ -1,7 +1,9 @@
 import * as React from "react";
-import { Navbar, Glyphicon, Button } from "react-bootstrap";
+import { Navbar, Glyphicon, Nav, NavItem } from "react-bootstrap";
 import { ArticleTable, ArticleItem } from "./ArticleTable" 
 import { ArticleModal } from "./ArticleModal"
+import * as NProgress from "nprogress"
+import * as axios from "axios"
 
 export interface AppState {
     viewArticleVisible?: boolean;
@@ -13,14 +15,36 @@ export interface AppState {
 }
 
 export class App extends React.Component<undefined, AppState> {
+    constructor()
+    {
+        super();
+        this.state = {
+            articles: []
+        }
+    }
+    
+    componentDidMount()
+    {
+        this.loadArticles();
+    }
+
     private loadArticles()
     {
-
+        NProgress.start();
+        axios.default.get("/api/list")
+            .then((response) => {
+                this.setState({articles: response.data});
+                NProgress.done();
+            });
     }
 
     private addArticle()
     {
-
+        axios.default.post("/api.push", {
+            heading: this.state.articleHeading,
+            article: this.state.articleBody,
+            origin: "external"
+        });
         this.setState({addArticleVisible: false});
     }
 
@@ -29,8 +53,8 @@ export class App extends React.Component<undefined, AppState> {
         var article = this.state.articles[articleIndex];
         this.setState({
             viewArticleVisible: true,
-            articleHeading: article.title,
-            articleBody:    article.body
+            articleHeading: article.heading,
+            articleBody:    article.article
         })
     }
 
@@ -56,32 +80,35 @@ export class App extends React.Component<undefined, AppState> {
     render() {
         return (
             <div>
-                <Navbar>
+                <Navbar inverse>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <a href="#">Fake News</a>
                         </Navbar.Brand>
                     </Navbar.Header>
                     <Navbar.Collapse>
-                        <Navbar.Text>
-                            <Button onClick={() => { this.showArticleAdd() }}>
+                        <Nav>
+                            <NavItem eventKey={1} href="#" onClick={() => { this.showArticleAdd() }}>
                                 <Glyphicon glyph="pencil" />
-                            </Button>
-                        </Navbar.Text>
+                                Add article
+                            </NavItem>
+                        </Nav>
                     </Navbar.Collapse>
                 </Navbar>
 
                 <ArticleTable articles={this.state.articles} 
                               onShowArticleDetails={this.showArticleDetails.bind(this)}/>
 
-                <ArticleModal isVisible={this.state.viewArticleVisible} articleHeading={this.state.articleBody} 
+                <ArticleModal isVisible={this.state.viewArticleVisible} 
+                              articleHeading={this.state.articleHeading} 
                               articleBody={this.state.articleBody}
                               readonly
                               onAccept={() => { this.closeArticleDetails() }}
                               onCancel={() => { this.closeArticleDetails() }}
                               title="Read the article"  />
 
-                <ArticleModal isVisible={this.state.addArticleVisible} articleHeading={this.state.articleBody} 
+                <ArticleModal isVisible={this.state.addArticleVisible} 
+                              articleHeading={this.state.articleHeading} 
                               articleBody={this.state.articleBody}
                               onAccept={() => { this.addArticle() }}
                               onCancel={() => { this.closeArticleAdd() }}

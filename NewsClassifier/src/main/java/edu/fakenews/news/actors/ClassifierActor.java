@@ -12,14 +12,14 @@ import edu.fakenews.news.classifier.Classifier;
 
 public class ClassifierActor extends AbstractActor {
 	private static final Logger logger = LoggerFactory.getLogger(ClassifierActor.class);
-	//private Classifier classifier = new Classifier();
+	private Classifier classifier = new Classifier();
 	
 	private void classify(Article article)
 	{
 		logger.info("Article sent to classification");
-		//this.classifier.classifyArticle(article);
+		String rating = this.classifier.classifyArticle(article);
 		article.setClassificationTimestamp(new Date());
-		article.setRating("passed");
+		article.setRating(rating);
 		getContext().actorSelection("/user/storage").tell(article, ActorRef.noSender());
 	}
 	

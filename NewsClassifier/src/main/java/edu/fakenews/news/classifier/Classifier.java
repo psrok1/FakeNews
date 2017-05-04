@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ import edu.fakenews.news.article.Article;
 
 public class Classifier {
 	private static final Logger logger = LoggerFactory.getLogger(Classifier.class);
-	private final String MAIN_SCRIPT = "classifier/run.py";
+	private final String MAIN_SCRIPT = "classifier/classify.py";
 	
 	private Process procClassifier = null;
 	
@@ -61,7 +62,7 @@ public class Classifier {
 		if(result == null)
 			throw new IOException();
 		
-		return result;
+		return new JSONObject(result).get("result").toString();
 	}
 	
 	public String classifyArticle(Article article)

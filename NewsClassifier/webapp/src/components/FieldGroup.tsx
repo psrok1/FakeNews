@@ -4,7 +4,6 @@ import { FormGroup, ControlLabel, FormControl, HelpBlock, FormControlProps } fro
 export interface FieldGroupProps extends FormControlProps {
     id: string;
     label: string;
-    help?: string;
 }
 
 export class FieldGroup extends React.Component<FieldGroupProps, undefined>
@@ -15,7 +14,6 @@ export class FieldGroup extends React.Component<FieldGroupProps, undefined>
             <FormGroup controlId={this.props.id}>
                 <ControlLabel>{this.props.label}</ControlLabel>
                 <FormControl {...this.props } />
-                {this.props.help && <HelpBlock>{this.props.help}</HelpBlock>}
             </FormGroup>
         )
     }
