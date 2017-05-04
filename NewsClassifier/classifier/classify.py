@@ -37,7 +37,7 @@ if __name__ == "__main__":
     for line in line_generator:
         news = json.loads(line)
         try:
-            [result] = classify(news["heading"], news["body"], best_fold)
+            [result] = classify(news["heading"], news["article"], best_fold)
 
             news["result"] = result
 
