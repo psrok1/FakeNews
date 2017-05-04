@@ -61,6 +61,7 @@ public class Classifier {
 		
 		this.pipeOutput.write(article.toJSON());
 		this.pipeOutput.newLine();
+		this.pipeOutput.flush();
 		logger.info("Sent to classifier "+article.toJSON());
 		
 		result = this.pipeInput.readLine();
