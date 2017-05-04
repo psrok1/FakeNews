@@ -30,10 +30,10 @@ public class NewsRunner implements ApplicationRunner {
 	private static Source sources[] = {
 			new Source<NYTimesGrabberActor>
 				("http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", 
-			     NYTimesGrabberActor.class),
+			     NYTimesGrabberActor.class)/*,
 			new Source<DailyMailGrabberActor>
 				("http://www.dailymail.co.uk/news/articles.rss",
-				 DailyMailGrabberActor.class)
+				 DailyMailGrabberActor.class)*/
 	};
 
 	@Autowired
@@ -52,7 +52,9 @@ public class NewsRunner implements ApplicationRunner {
 				), "classifier");
 		
 		// Create storage actor managed by Spring
-		actorSystem.actorOf(springExtension.props("storageActor"), "storage");
+		final ActorRef storageActor = actorSystem.actorOf(springExtension.props("storageActor"), "storage");
+		
+		logger.info("Storage actor path is: "+storageActor.path().toString());
 		
 		for(Source<?> source: sources)
 		{

@@ -1,7 +1,9 @@
 package edu.fakenews.news.article;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,9 +17,17 @@ public class Article implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 	
-	private String origin = null;
+	@Column(columnDefinition = "CLOB")
 	private String heading = null;
+	
+	@Column(columnDefinition = "CLOB")
 	private String article = null;
+
+	private String origin = null;
+	private Date pubTimestamp;
+	
+	private Date classificationTimestamp;
+	private String rating = null;
 	
 	protected Article() {}
 	
@@ -48,5 +58,29 @@ public class Article implements Serializable {
 				.put("heading", heading)
 				.put("article", article)
 				.toString();
+	}
+
+	public Date getClassificationTimestamp() {
+		return classificationTimestamp;
+	}
+
+	public void setClassificationTimestamp(Date classificationTimestamp) {
+		this.classificationTimestamp = classificationTimestamp;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
+
+	public Date getPubTimestamp() {
+		return pubTimestamp;
+	}
+
+	public void setPubTimestamp(Date pubTimestamp) {
+		this.pubTimestamp = pubTimestamp;
 	}
 }

@@ -57,12 +57,8 @@ public class RSSFeedActor extends AbstractActor {
 				.filter(e -> e.getPublishedDate().after(feedLastDate))
 				.forEach(e -> {
 					logger.info(String.format("Found some good news: %s", e.getLink()));
-					/* send to grabberActor */
-					try {
-						grabberActor.tell(new URL(e.getLink()), getSender());
-					} catch (MalformedURLException exc) {
-						exc.printStackTrace();
-					}
+					/* send entry to grabberActor */
+					grabberActor.tell(e, getSender());
 				});
 			
 			/**

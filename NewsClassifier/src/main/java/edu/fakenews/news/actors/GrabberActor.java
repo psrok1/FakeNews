@@ -1,11 +1,14 @@
 package edu.fakenews.news.actors;
 
 import java.net.URL;
+import java.util.Date;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.rometools.rome.feed.synd.SyndEntry;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -18,9 +21,12 @@ public abstract class GrabberActor extends AbstractActor {
 	
 	abstract protected Article getArticle(Document document);
 		
-	private void getNewsFromUrl(URL newsUrl)
+	private void getNewsFromUrl(SyndEntry entry)
 	{
 		try {
+			URL newsUrl = new URL(entry.getLink());
+			Date pubDate = entry.getPublishedDate();
+			
 			logger.info("Getting news from "+newsUrl.toString());
 			String html = http.get(newsUrl);
 			if(html == null)
@@ -30,8 +36,11 @@ public abstract class GrabberActor extends AbstractActor {
 			}
 			Document doc = Jsoup.parse(html);
 			logger.info("Parsing news");
+			
 			Article article = getArticle(doc);
 			article.setOrigin(newsUrl.toString());
+			article.setPubTimestamp(pubDate);
+			
 			logger.info(String.format("Fetched article %s", article.getHeading()));
 			getSender().tell(article, ActorRef.noSender());
 		} catch(Exception e)
@@ -44,8 +53,7 @@ public abstract class GrabberActor extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(URL.class, this::getNewsFromUrl)
+				.match(SyndEntry.class, this::getNewsFromUrl)
 				.build();
 	}
-
 }

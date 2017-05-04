@@ -40,7 +40,7 @@ public class WebController {
 	@RequestMapping(value="/push", method=RequestMethod.POST)
     public String addArticle(@RequestBody final Article article) {
 		article.setOrigin("external");
-		actorSystem.actorSelection("classifier").tell(article, ActorRef.noSender());
+		actorSystem.actorSelection("/user/classifier").tell(article, ActorRef.noSender());
 		return "OK";
     }
 }
