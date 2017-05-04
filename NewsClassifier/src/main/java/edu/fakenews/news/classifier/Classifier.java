@@ -20,6 +20,7 @@ public class Classifier {
 	
 	private BufferedReader pipeInput = null;
 	private BufferedWriter pipeOutput = null;
+	private BufferedReader pipeError = null;
 	
 	public Classifier()
 	{
@@ -41,6 +42,8 @@ public class Classifier {
 					new InputStreamReader(procClassifier.getInputStream()));
 			this.pipeOutput = new BufferedWriter(
 					new OutputStreamWriter(procClassifier.getOutputStream()));
+			this.pipeError = new BufferedReader(
+					new InputStreamReader(procClassifier.getErrorStream()));
 		} catch(IOException e)
 		{
 			logger.error("Classifier spawn failed");
@@ -52,7 +55,7 @@ public class Classifier {
 		String result;
 		
 		if(this.procClassifier == null || !this.procClassifier.isAlive())
-			throw new IOException();
+			throw new IOException("Classifier is not running");
 		
 		this.pipeOutput.write(article.toJSON());
 		this.pipeOutput.newLine();
@@ -60,7 +63,10 @@ public class Classifier {
 		result = this.pipeInput.readLine();
 		
 		if(result == null)
-			throw new IOException();
+			throw new IOException("Got EOF from classifier");
+		
+		while(this.pipeError.ready())
+			logger.error(this.pipeError.readLine());
 		
 		return new JSONObject(result).get("result").toString();
 	}
@@ -72,6 +78,7 @@ public class Classifier {
 		} catch(IOException e)
 		{
 			logger.error("Something was wrong with classifier. Trying to respawn.");
+			e.printStackTrace();
 			this.spawn();
 		}
 		return null;
