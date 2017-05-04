@@ -33,7 +33,7 @@ public class Classifier {
 				procClassifier.destroy();
 			
 			this.procClassifier = Runtime.getRuntime().exec(new String[]{
-					"python",
+					"python3",
 					MAIN_SCRIPT
 			});
 			
