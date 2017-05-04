@@ -1,6 +1,26 @@
+buildscript {
+
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+
+  dependencies {
+    classpath "com.moowork.gradle:gradle-node-plugin:1.1.1"
+  }
+}
+
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'java'
+apply plugin: 'com.moowork.node'
+
+node {
+  version = '5.8.0'
+  npmVersion = '4.0.5'
+  download = true
+}
 
 repositories {
     mavenCentral()
@@ -13,11 +33,31 @@ dependencies {
 	compile 'org.json:json:20160810'
 	compile 'org.jsoup:jsoup:1.10.2'
 	compile 'com.rometools:rome:1.7.2'
-	compile 'org.slf4j:1.6.1'	
+	compile 'org.slf4j:slf4j-api:1.7.25'
 	compile 'com.typesafe.akka:akka-actor_2.11:2.5.1'
   	compile 'org.apache.httpcomponents:httpclient:4.5.3'
   	
   	compile group: 'com.h2database', name: 'h2', version: '1.4.195'
   	compile group: 'com.google.guava', name: 'guava', version: '21.0'
 }
- 
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.14.1'
+}
+
+task appNpmInstall(type: NpmTask) {
+    description = "Installs dependencies from package.json"
+    workingDir = file("${project.projectDir}/webapp")
+    args = ['install']
+}
+
+import com.moowork.gradle.node.task.NodeTask
+
+task webpack(type: NodeTask, dependsOn: 'appNpmInstall') {
+  def osName = System.getProperty("os.name").toLowerCase();
+  if (osName.contains("windows")) {
+    script = project.file('node_modules/webpack/bin/webpack.js')
+  } else {
+    script = project.file('node_modules/.bin/webpack')
+  }
+}
