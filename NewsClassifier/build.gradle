@@ -54,10 +54,11 @@ task appNpmInstall(type: NpmTask) {
 import com.moowork.gradle.node.task.NodeTask
 
 task webpack(type: NodeTask, dependsOn: 'appNpmInstall') {
+  workingDir = file("${project.projectDir}/webapp")
   def osName = System.getProperty("os.name").toLowerCase();
   if (osName.contains("windows")) {
-    script = project.file('node_modules/webpack/bin/webpack.js')
+    script = project.file('webapp/node_modules/webpack/bin/webpack.js')
   } else {
-    script = project.file('node_modules/.bin/webpack')
+    script = project.file('webapp/node_modules/.bin/webpack')
   }
 }
