@@ -40,7 +40,7 @@ export class App extends React.Component<undefined, AppState> {
 
     private addArticle()
     {
-        axios.default.post("/api.push", {
+        axios.default.post("/api/push", {
             heading: this.state.articleHeading,
             article: this.state.articleBody,
             origin: "external"
