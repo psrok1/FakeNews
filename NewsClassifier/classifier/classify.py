@@ -42,6 +42,7 @@ if __name__ == "__main__":
             news["result"] = result
 
             print(json.dumps(news))
+            sys.stdout.flush()
         except KeyError as err:
             print("Key error in json object: {0}".format(err))
 
