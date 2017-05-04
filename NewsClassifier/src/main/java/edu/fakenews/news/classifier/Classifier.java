@@ -61,15 +61,15 @@ public class Classifier {
 		
 		this.pipeOutput.write(article.toJSON());
 		this.pipeOutput.newLine();
+		logger.info("Sent to classifier "+article.toJSON());
 		
 		result = this.pipeInput.readLine();
 		
+		logger.info("Got "+result);
+		
 		if(result == null)
 			throw new IOException("Got EOF from classifier");
-		
-		while(this.pipeError.ready())
-			logger.error(this.pipeError.readLine());
-		
+				
 		return new JSONObject(result).get("result").toString();
 	}
 	
