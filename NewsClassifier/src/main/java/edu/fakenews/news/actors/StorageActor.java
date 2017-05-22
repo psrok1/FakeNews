@@ -1,5 +1,7 @@
 package edu.fakenews.news.actors;
 
+import java.net.MalformedURLException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,16 @@ public class StorageActor extends AbstractActor {
 	
 	private void getSourceLastUpdate(Source source)
 	{
+		try {
+			Article lastArticle = repository.findBySourceOrderByPubTimestampDesc(source.getUrl().toString()).get(0);
+			source.setFeedLastUpdate(lastArticle.getPubTimestamp());
+		} catch(IndexOutOfBoundsException e)
+		{
+			logger.info("Article related with source not found");
+		} catch(MalformedURLException e)
+		{
+			e.printStackTrace();
+		}
 		getSender().tell(source, ActorRef.noSender());
 	}
 	
