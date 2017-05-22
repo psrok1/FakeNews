@@ -24,7 +24,7 @@ export interface ArticleTableState {
 export class ArticleTable extends React.Component<ArticleTableProps, ArticleTableState> {
     constructor() {
         super();
-        this.state = { currentPage: 0 };
+        this.state = { currentPage: 1 };
     }
 
     private prettyTime(epoch: number): string
