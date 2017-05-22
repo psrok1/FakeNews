@@ -21,11 +21,6 @@ public class StorageActor extends AbstractActor {
 	
 	@Autowired
 	private ArticleRepository repository;
-
-	public StorageActor()
-	{
-		logger.info(String.format("Hello world! There are %d articles in database right now.", repository.count()));
-	}
 	
 	private void storeArticle(Article article)
 	{
@@ -35,6 +30,7 @@ public class StorageActor extends AbstractActor {
 	
 	private void getSourceLastUpdate(Source source)
 	{
+		logger.info(String.format("There are %d articles in database right now.", repository.count()));
 		try {
 			String sourceUrl = source.getUrl().toString();
 			logger.info(String.format("Looking for last article related to %s source", sourceUrl));
