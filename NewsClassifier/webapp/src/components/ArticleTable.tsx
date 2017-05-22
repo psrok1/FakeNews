@@ -129,7 +129,7 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
                         </DropdownButton>
                     </InputGroup>
                 </FormGroup>
-                <Table striped bordered condensed hover responsive>
+                <Table bordered condensed hover responsive>
                     <thead>
                         <th width="70%">Title</th>
                         <th width="15%">Date</th>
