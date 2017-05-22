@@ -61,7 +61,7 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
     }
     
     render() {
-        let rows = this.props.articles.slice(this.state.currentPage*10, (this.state.currentPage+1)*10-1)
+        let rows = this.props.articles.slice((this.state.currentPage-1)*10, (this.state.currentPage)*10-1)
                     .map((value: ArticleItem, index: number, array: ArticleItem[]) => {
             return (
                  <tr className={this.bgRating(value.rating)}>
