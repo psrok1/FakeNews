@@ -31,11 +31,13 @@ public class StorageActor extends AbstractActor {
 	private void getSourceLastUpdate(Source source)
 	{
 		try {
-			Article lastArticle = repository.findBySourceOrderByPubTimestampDesc(source.getUrl().toString()).get(0);
+			String sourceUrl = source.getUrl().toString();
+			logger.info(String.format("Looking for last article related to %s source", sourceUrl));
+			Article lastArticle = repository.findBySourceOrderByPubTimestampDesc(sourceUrl).get(0);
 			source.setFeedLastUpdate(lastArticle.getPubTimestamp());
 		} catch(IndexOutOfBoundsException e)
 		{
-			logger.info("Article related with source not found");
+			logger.info("No articles for source in database");
 		} catch(MalformedURLException e)
 		{
 			e.printStackTrace();

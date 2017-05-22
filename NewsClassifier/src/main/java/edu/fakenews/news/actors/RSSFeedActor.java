@@ -31,7 +31,6 @@ public class RSSFeedActor extends AbstractActor {
 			this.feedUrl = feedSource.getUrl();
 			this.grabberActor.tell(this.feedUrl, ActorRef.noSender());
 			this.feedLastUpdate = feedSource.getFeedLastUpdate();
-
 			logger.info(String.format("Set feed URL to %s", feedUrl));
 		} catch (MalformedURLException e) {
 			logger.error("Critical error during feed setup");
