@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table, Pagination } from "react-bootstrap";
+import { Table, Pagination, FormGroup, InputGroup, DropdownButton, MenuItem, FormControl } from "react-bootstrap";
 
 export type ArticleRating = "agree" | "disagree" | "discuss" | "unrelated";
 
@@ -18,13 +18,19 @@ export interface ArticleTableProps {
 }
 
 export interface ArticleTableState {
-    currentPage: number;
+    currentPage?: number;
+    filterName?: string;
+    filterStatus?: string;
 }
 
 export class ArticleTable extends React.Component<ArticleTableProps, ArticleTableState> {
     constructor() {
         super();
-        this.state = { currentPage: 1 };
+        this.state = { 
+            currentPage: 1,
+            filterName: "",
+            filterStatus: null
+         };
     }
 
     private prettyTime(epoch: number): string
@@ -59,20 +65,41 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
             currentPage: pageNo
         });
     }
+
+    private handleSetNameFilter(filterName: string) {
+        this.setState({
+            filterName: filterName
+        });
+    }
+
+    private handleSetStatusFilter(filterStatus: string) {
+        this.setState({
+            filterStatus: filterStatus
+        });
+    }
     
     render() {
-        let rows = this.props.articles.slice((this.state.currentPage-1)*10, (this.state.currentPage)*10-1)
+        let rows = this.props.articles
+                    .filter((value: ArticleItem) => {
+                        return !this.state.filterName || value.heading.toLowerCase().indexOf(this.state.filterName.toLowerCase()) >= 0;
+                    })
+                    .filter((value: ArticleItem) => {
+                        return !this.state.filterStatus || value.rating == this.state.filterStatus;
+                    })
                     .map((value: ArticleItem, index: number, array: ArticleItem[]) => {
             return (
                  <tr className={this.bgRating(value.rating)}>
                     <td><a href="#" onClick={() => this.props.onShowArticleDetails(index)}>{value.heading}</a></td>
+                    <td></td>
                     <td>{this.prettyTime(value.classificationTimestamp)}</td>
                     <td>{this.prettyRating(value.rating)}</td>
                 </tr>);
         });
 
+        console.log(rows);
+
         return (
-            <div>
+            <div className="main-container">
                 <div className="text-center">
                     <Pagination
                         prev
@@ -81,19 +108,37 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
                         last
                         ellipsis
                         boundaryLinks
-                        items={Math.floor(this.props.articles.length/10)}
+                        items={Math.floor(rows.length/10)}
                         maxButtons={5}
                         activePage={this.state.currentPage}
                         onSelect={this.handleSelect.bind(this)} />
                 </div>
-                <Table striped bordered condensed hover responsive>
+                <FormGroup>
+                    <InputGroup>
+                        <FormControl type="text" value={this.state.filterName} onChange={(ev) => {
+                                this.handleSetNameFilter((ev.target as any).value);
+                            }}/>
+                        <DropdownButton
+                            componentClass={InputGroup.Button}
+                            id="input-dropdown-addon"
+                            title="Status">
+                            <MenuItem key="0" onClick={() => this.handleSetStatusFilter(null)}><span className="text-success">no filter</span></MenuItem>
+                            <MenuItem key="1" onClick={() => this.handleSetStatusFilter("agree")}><span className="text-success">agree</span></MenuItem>
+                            <MenuItem key="2" onClick={() => this.handleSetStatusFilter("disagree")}><span className="text-warning">disagree</span></MenuItem>
+                            <MenuItem key="3" onClick={() => this.handleSetStatusFilter("discuss")}><span className="text-info"   >discuss</span></MenuItem>
+                            <MenuItem key="4" onClick={() => this.handleSetStatusFilter("unrelated")}><span className="text-danger" >unrelated</span></MenuItem>
+                        </DropdownButton>
+                    </InputGroup>
+                </FormGroup>
+                <Table bordered condensed hover responsive>
                     <thead>
-                        <th width="70%">Title</th>
+                        <th width="55%">Title</th>
+                        <th width="15%">Origin</th>
                         <th width="15%">Date</th>
                         <th width="15%">Rate</th>
                     </thead>
                     <tbody>
-                        {rows}
+                        {rows.slice((this.state.currentPage-1)*10, (this.state.currentPage)*10-1)}
                     </tbody>
                 </Table>
             </div>
