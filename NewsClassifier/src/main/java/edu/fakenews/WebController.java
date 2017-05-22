@@ -34,7 +34,7 @@ public class WebController {
 	
 	@RequestMapping(value="/list", method=RequestMethod.GET)
     public List<Article> getArticles() {
-		return Lists.newArrayList(repository.findAll());
+		return Lists.newArrayList(repository.findAllByOrderByClassificationTimestampDesc());
     }
 	
 	@RequestMapping(value="/push", method=RequestMethod.POST)

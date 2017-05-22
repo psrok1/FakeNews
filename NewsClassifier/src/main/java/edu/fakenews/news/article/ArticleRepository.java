@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArticleRepository extends CrudRepository<Article, Long> { 
 	List<Article> findBySourceOrderByPubTimestampDesc(String source);
+	List<Article> findAllByOrderByClassificationTimestampDesc();
 }
