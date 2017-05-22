@@ -22,7 +22,9 @@ public class Article implements Serializable {
 	
 	@Column(columnDefinition = "CLOB")
 	private String article = null;
-
+	
+	private String source = null;
+	
 	private String origin = null;
 	private Date pubTimestamp;
 	
@@ -82,5 +84,13 @@ public class Article implements Serializable {
 
 	public void setPubTimestamp(Date pubTimestamp) {
 		this.pubTimestamp = pubTimestamp;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 }

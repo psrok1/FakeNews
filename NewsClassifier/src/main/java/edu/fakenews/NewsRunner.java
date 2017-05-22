@@ -1,7 +1,7 @@
 package edu.fakenews;
 
-import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +12,14 @@ import org.springframework.stereotype.Component;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
+import akka.actor.Inbox;
 import akka.actor.Props;
 import akka.routing.BalancingPool;
 import edu.fakenews.news.Source;
 import edu.fakenews.news.SpringExtension;
 import edu.fakenews.news.actors.ClassifierActor;
 import edu.fakenews.news.actors.RSSFeedActor;
+import edu.fakenews.news.article.ArticleRepository;
 import edu.fakenews.news.grabbers.DailyMailGrabberActor;
 import edu.fakenews.news.grabbers.NYTimesGrabberActor;
 import scala.concurrent.duration.Duration;
@@ -41,7 +43,7 @@ public class NewsRunner implements ApplicationRunner {
 	
 	@Autowired
 	private SpringExtension springExtension;
-		
+			
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		logger.info("Hello world");
@@ -54,14 +56,21 @@ public class NewsRunner implements ApplicationRunner {
 		// Create storage actor managed by Spring
 		final ActorRef storageActor = actorSystem.actorOf(springExtension.props("storageActor"), "storage");
 		
+		final Inbox actorSystemInbox = Inbox.create(actorSystem);
+
 		logger.info("Storage actor path is: "+storageActor.path().toString());
 		
 		for(Source<?> source: sources)
 		{
+			actorSystemInbox.send(storageActor, source);
+		}
+				
+		for(int i = 0; i < sources.length; i++)
+		{
 			try {
-				final ActorRef rssFeed = actorSystem.actorOf(
-						Props.create(RSSFeedActor.class, source.getGrabber()));
-				rssFeed.tell(source.getUrl(), ActorRef.noSender());
+				Source source = (Source)actorSystemInbox.receive(Duration.create(15, TimeUnit.SECONDS));
+				final ActorRef rssFeed = actorSystem.actorOf(Props.create(RSSFeedActor.class));
+				rssFeed.tell(source, ActorRef.noSender());
 				actorSystem.scheduler().schedule(
 						Duration.Zero(), 
 						Duration.create(1, TimeUnit.HOURS), 
@@ -69,8 +78,9 @@ public class NewsRunner implements ApplicationRunner {
 						"update",
 						actorSystem.dispatcher(),
 						classifierPool); /* classifierPool as sender */
-			} catch(MalformedURLException e)
+			} catch(TimeoutException e)
 			{
+				logger.error("Timeout during creation of feed actor");
 				e.printStackTrace();
 			}
 		}

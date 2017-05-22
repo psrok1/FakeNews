@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import edu.fakenews.news.Source;
 
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
@@ -21,17 +22,21 @@ public class RSSFeedActor extends AbstractActor {
 	
 	ActorRef grabberActor;
 	URL feedUrl;
-	Date feedLastDate;
-	
-	public RSSFeedActor(Class<GrabberActor> grabberClass) {
-		grabberActor = getContext().actorOf(Props.create(grabberClass), "grabber");
-	}
-	
-	private void setFeedUrl(URL feedUrl)
+	Date feedLastUpdate;
+		
+	private void setFeedSource(Source feedSource)
 	{
-		logger.info(String.format("Set feed URL to %s", feedUrl));
-		this.feedUrl = feedUrl;
-		this.feedLastDate = null;
+		try {
+			this.grabberActor = getContext().actorOf(Props.create(feedSource.getGrabber()), "grabber");
+			this.feedUrl = feedSource.getUrl();
+			this.grabberActor.tell(this.feedUrl, ActorRef.noSender());
+			this.feedLastUpdate = feedSource.getFeedLastUpdate();
+
+			logger.info(String.format("Set feed URL to %s", feedUrl));
+		} catch (MalformedURLException e) {
+			logger.error("Critical error during feed setup");
+			e.printStackTrace();
+		}
 	}
 	
 	private void updateFeed()
@@ -41,12 +46,12 @@ public class RSSFeedActor extends AbstractActor {
 			SyndFeedInput input = new SyndFeedInput();
 			SyndFeed feed = input.build(new XmlReader(feedUrl));
 			
-			if(feedLastDate == null)
+			if(feedLastUpdate == null)
 			{
 				Calendar c = Calendar.getInstance();
 				c.setTime(new Date());
 				c.add(Calendar.DATE, -1);
-				feedLastDate = c.getTime();
+				feedLastUpdate = c.getTime();
 			}
 			
 			/**
@@ -54,7 +59,7 @@ public class RSSFeedActor extends AbstractActor {
 			 */
 			
 			feed.getEntries().stream()
-				.filter(e -> e.getPublishedDate().after(feedLastDate))
+				.filter(e -> e.getPublishedDate().after(feedLastUpdate))
 				.forEach(e -> {
 					logger.info(String.format("Found some good news: %s", e.getLink()));
 					/* send entry to grabberActor */
@@ -65,8 +70,8 @@ public class RSSFeedActor extends AbstractActor {
 			 * Update earliest feed pub timestamp
 			 */
 			feed.getEntries().forEach(e -> {
-				if(e.getPublishedDate().after(feedLastDate))
-					feedLastDate = e.getPublishedDate(); 
+				if(e.getPublishedDate().after(feedLastUpdate))
+					feedLastUpdate = e.getPublishedDate(); 
 			});
 		} catch(Exception e)
 		{
@@ -77,7 +82,7 @@ public class RSSFeedActor extends AbstractActor {
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
-				.match(URL.class, this::setFeedUrl)
+				.match(Source.class, this::setFeedSource)
 				.match(String.class, cmd -> {
 					if(cmd.equals("update"))
 						this.updateFeed();

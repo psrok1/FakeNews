@@ -18,9 +18,15 @@ import edu.fakenews.news.article.Article;
 public abstract class GrabberActor extends AbstractActor {
 	private static final Logger logger = LoggerFactory.getLogger(GrabberActor.class);
 	private HTTPSession http = new HTTPSession();
+	private URL source = null;
 	
 	abstract protected Article getArticle(Document document);
 		
+	private void setSource(URL source)
+	{
+		this.source = source;
+	}
+	
 	private void getNewsFromUrl(SyndEntry entry)
 	{
 		try {
@@ -38,6 +44,7 @@ public abstract class GrabberActor extends AbstractActor {
 			logger.info("Parsing news");
 			
 			Article article = getArticle(doc);
+			article.setSource(source.toString());
 			article.setOrigin(newsUrl.toString());
 			article.setPubTimestamp(pubDate);
 			
@@ -54,6 +61,7 @@ public abstract class GrabberActor extends AbstractActor {
 	public Receive createReceive() {
 		return receiveBuilder()
 				.match(SyndEntry.class, this::getNewsFromUrl)
+				.match(URL.class, this::setSource)
 				.build();
 	}
 }

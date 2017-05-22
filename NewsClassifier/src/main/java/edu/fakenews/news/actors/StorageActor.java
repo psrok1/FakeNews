@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import akka.actor.AbstractActor;
+import akka.actor.ActorRef;
+import edu.fakenews.news.Source;
 import edu.fakenews.news.article.Article;
 import edu.fakenews.news.article.ArticleRepository;
 
@@ -24,10 +26,16 @@ public class StorageActor extends AbstractActor {
 		repository.save(article);
 	}
 	
+	private void getSourceLastUpdate(Source source)
+	{
+		getSender().tell(source, ActorRef.noSender());
+	}
+	
 	@Override
 	public Receive createReceive() {
 		return receiveBuilder()
 				.match(Article.class, this::storeArticle)
+				.match(Source.class, this::getSourceLastUpdate)
 				.matchAny((o) -> {
 					logger.warn("Got something unknown");
 				})
