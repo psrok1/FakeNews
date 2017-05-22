@@ -90,6 +90,7 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
             return (
                  <tr className={this.bgRating(value.rating)}>
                     <td><a href="#" onClick={() => this.props.onShowArticleDetails(index)}>{value.heading}</a></td>
+                    <td></td>
                     <td>{this.prettyTime(value.classificationTimestamp)}</td>
                     <td>{this.prettyRating(value.rating)}</td>
                 </tr>);
@@ -131,7 +132,8 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
                 </FormGroup>
                 <Table bordered condensed hover responsive>
                     <thead>
-                        <th width="70%">Title</th>
+                        <th width="55%">Title</th>
+                        <th width="15%">Origin</th>
                         <th width="15%">Date</th>
                         <th width="15%">Rate</th>
                     </thead>

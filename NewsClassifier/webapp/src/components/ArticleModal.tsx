@@ -7,6 +7,8 @@ export interface ArticleModalProps {
     title: string;
     articleHeading: string;
     articleBody: string;
+    articleOrigin?: string;
+    articlePublished?: string;
     readonly?: boolean;
     onChange?: React.EventHandler<React.FormEvent<React.Component<ReactBootstrap.FormControlProps, {}>>>;
     onAccept: () => void;
@@ -15,9 +17,30 @@ export interface ArticleModalProps {
 
 export class ArticleModal extends React.Component<ArticleModalProps, undefined> {
     render() {
+        var additionalFields: JSX.Element[] = [];
+
+        if(this.props.articleOrigin)
+        {
+            additionalFields = additionalFields.concat([
+                    <dt><strong>Original article</strong></dt>,
+                    <dd><a href={this.props.articleOrigin} target="_blank">{this.props.articleHeading}</a></dd>
+            ]);
+        }
+
+        if(this.props.articlePublished)
+        {
+            additionalFields = additionalFields.concat([
+                    <dt><strong>Published on</strong></dt>,
+                    <dd>{this.props.articlePublished}</dd>
+            ]);
+        }
+
         return <Modal show={this.props.isVisible} onHide={this.props.onCancel}>
             <Modal.Header>
                 <Modal.Title>{this.props.title}</Modal.Title>
+                <dl>
+                    {additionalFields}
+                </dl>
             </Modal.Header>
             <Modal.Body>
                 <form>
