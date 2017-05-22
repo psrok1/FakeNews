@@ -98,7 +98,7 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
         console.log(rows);
 
         return (
-            <div>
+            <div className="main-container">
                 <div className="text-center">
                     <Pagination
                         prev
