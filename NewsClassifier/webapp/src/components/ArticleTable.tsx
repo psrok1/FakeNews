@@ -4,6 +4,7 @@ import { Table, Pagination, FormGroup, InputGroup, DropdownButton, MenuItem, For
 export type ArticleRating = "agree" | "disagree" | "discuss" | "unrelated";
 
 export interface ArticleItem {
+    index?: number;
     heading: string;
     article: string;
     origin: string;
@@ -80,6 +81,10 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
     
     render() {
         let rows = this.props.articles
+                    .map((value: ArticleItem, index: number) => {
+                        value.index = index;
+                        return value;
+                    })
                     .filter((value: ArticleItem) => {
                         return !this.state.filterName || value.heading.toLowerCase().indexOf(this.state.filterName.toLowerCase()) >= 0;
                     })
@@ -89,7 +94,7 @@ export class ArticleTable extends React.Component<ArticleTableProps, ArticleTabl
                     .map((value: ArticleItem, index: number, array: ArticleItem[]) => {
             return (
                  <tr className={this.bgRating(value.rating)}>
-                    <td><a href="#" onClick={() => this.props.onShowArticleDetails(index)}>{value.heading}</a></td>
+                    <td><a href="#" onClick={() => this.props.onShowArticleDetails(value.index)}>{value.heading}</a></td>
                     <td></td>
                     <td>{this.prettyTime(value.classificationTimestamp)}</td>
                     <td>{this.prettyRating(value.rating)}</td>
