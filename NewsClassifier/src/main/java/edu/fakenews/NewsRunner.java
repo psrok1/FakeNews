@@ -20,6 +20,7 @@ import edu.fakenews.news.SpringExtension;
 import edu.fakenews.news.actors.ClassifierActor;
 import edu.fakenews.news.actors.RSSFeedActor;
 import edu.fakenews.news.article.ArticleRepository;
+import edu.fakenews.news.grabbers.CallTheCopsGrabberActor;
 import edu.fakenews.news.grabbers.DailyMailGrabberActor;
 import edu.fakenews.news.grabbers.NYTimesGrabberActor;
 import scala.concurrent.duration.Duration;
@@ -32,10 +33,13 @@ public class NewsRunner implements ApplicationRunner {
 	private static Source sources[] = {
 			new Source<NYTimesGrabberActor>
 				("http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", 
-			     NYTimesGrabberActor.class)/*,
+			     NYTimesGrabberActor.class),
 			new Source<DailyMailGrabberActor>
-				("http://www.dailymail.co.uk/news/articles.rss",
-				 DailyMailGrabberActor.class)*/
+				("http://www.dailymail.co.uk/news/index.rss",
+				 DailyMailGrabberActor.class),
+			new Source<CallTheCopsGrabberActor>
+				("http://www.callthecops.net/feed/",
+				 CallTheCopsGrabberActor.class)
 	};
 
 	@Autowired
